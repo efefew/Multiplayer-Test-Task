@@ -2,7 +2,7 @@
  Создать 2D игру для Android на Unity, где 2 и более игроков с разных Android устройств смогут зайти в лобби
 # Установка и запуск
 1.  Склонируйте репозиторий с помощью команды git clone: 
-Copy git clone https://github.com/efefew/Local-Chess.git
+Copy git clone https://github.com/efefew/Multiplayer-Test-Task.git
 2.  Откройте проект в Unity.
 3.  Запустите игру, нажав кнопку "Play" в редакторе Unity.
 # Примеры использования
