@@ -7,3 +7,5 @@ Copy git clone https://github.com/efefew/Multiplayer-Test-Task.git
 3.  Запустите игру, нажав кнопку "Play" в редакторе Unity.
 # Примеры использования
 https://github.com/efefew/Multiplayer-Test-Task/assets/29331867/43b4e859-b984-4dbc-bcae-abe6202adefa
+# Документация
+Документация API игры можно найти в файле [docs.md](https://github.com/efefew/Multiplayer-Test-Task/blob/main/docs.md).
