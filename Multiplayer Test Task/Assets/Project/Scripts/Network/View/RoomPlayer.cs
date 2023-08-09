@@ -6,18 +6,33 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(NetworkRoomPlayer))]
+/// <summary>
+/// Класс игрока в комнате, управляющий отображением игрока в комнате
+/// </summary>
 public class RoomPlayer : NetworkBehaviour, ISingleton
 {
     #region Properties
 
+    /// <summary>
+    /// Синглтон игрока в комнате
+    /// </summary>
     public static RoomPlayer singleton { get; private set; }
 
     #endregion Properties
 
     #region Fields
 
+    /// <summary>
+    /// Никнейм игрока
+    /// </summary>
     [SyncVar(hook = nameof(ChangeNickname))]
     public string nickname;
+
+    /// <summary>
+    /// Цвет игрока
+    /// </summary>
+    [SyncVar]
+    public Color colorPlayer;
 
     [SerializeField]
     private Button buttonKick;
@@ -29,12 +44,10 @@ public class RoomPlayer : NetworkBehaviour, ISingleton
 
     private Network network;
 
-    [SyncVar]
-    public Color colorPlayer;
-
     #endregion Fields
 
     #region Methods
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -51,7 +64,6 @@ public class RoomPlayer : NetworkBehaviour, ISingleton
         labelNamePlayer.text = nickname;
 
         player.ReadyToBeginHandler += (bool readyToBegin) => labelIsReady.text = readyToBegin ? "ГОТОВ" : "НЕ ГОТОВ";
-        //player.IndexHandler += (int index) => labelNamePlayer.text = network.nickname != "" ? network.nickname : $"Player [{player.index + 1}]";
 
         network.roomPlayers.Add(this);
         transform.SetParent(network.roomPlayerConteiner);
@@ -72,11 +84,13 @@ public class RoomPlayer : NetworkBehaviour, ISingleton
             network.AllPlayersReadyHandler += allPlayersReady => network.ServerChangeScene(network.GameplayScene);
         }
     }
+
     public override void OnStopClient()
     {
         base.OnStopClient();
         _ = network.roomPlayers.Remove(this);
     }
+
     [Command(requiresAuthority = false)]
     public void CmdNickname(string nickname) => this.nickname = nickname;
 

@@ -10,31 +10,61 @@ using UnityEngine.UI;
 
 public class GameInformationView : MonoBehaviour
 {
-    #region Fields
-
+    /// <summary>
+    /// Bootstrap для инициализации синглтонов.
+    /// </summary>
     private Bootstrap bootstrap;
+
+    /// <summary>
+    /// Сеть для работы с игроками.
+    /// </summary>
     private Network network;
+
+    /// <summary>
+    /// Локальный игрок.
+    /// </summary>
     private Player localPlayer;
+
+    /// <summary>
+    /// победный pop-up с информацией, где указаны имя победителя и сколько монет он собрал.
+    /// </summary>
     public GameObject popup;
 
+    /// <summary>
+    /// Регулятор здоровья.
+    /// </summary>
     [SerializeField]
     private Slider slider;
 
+    /// <summary>
+    /// Контейнер для списка игроков.
+    /// </summary>
     [SerializeField]
-    private Transform contentPlayer, contentPlayerPopup;
+    private Transform contentPlayer;
 
+    /// <summary>
+    /// Контейнер для списка игроков в попапе.
+    /// </summary>
+    [SerializeField]
+    private Transform contentPlayerPopup;
+
+    /// <summary>
+    /// Шаблон для отображения игрока в списке.
+    /// </summary>
     [SerializeField]
     private PlayerLabel playerLabel;
 
+    /// <summary>
+    /// Джойстик для управления игроком.
+    /// </summary>
     [SerializeField]
     private Joystick joystick;
 
+    /// <summary>
+    /// Кнопка стрельбы.
+    /// </summary>
     [SerializeField]
     private Button shootButton;
-
-    #endregion Fields
-
-    #region Methods
 
     private void Start()
     {
@@ -51,6 +81,10 @@ public class GameInformationView : MonoBehaviour
         else
             bootstrap.InitializeSingletonHandler += OnSingletonCreate;
     }
+
+    /// <summary>
+    /// Создание окна попапа с игроками.
+    /// </summary>
     public void CreatePopup()
     {
         contentPlayerPopup.Clear();
@@ -65,6 +99,10 @@ public class GameInformationView : MonoBehaviour
             label.Build(sortPlayers[idPlayer]);
         }
     }
+
+    /// <summary>
+    /// Обновление списка игроков.
+    /// </summary>
     private void OnChangeListPlayer()
     {
         contentPlayer.Clear();
@@ -79,6 +117,9 @@ public class GameInformationView : MonoBehaviour
 
     private void OnDestroy() => network.ChangeListPlayerHandler -= OnChangeListPlayer;
 
+    /// <summary>
+    /// Обработка инициализации синглтона.
+    /// </summary>
     public void OnSingletonCreate(ISingleton singleton)
     {
         if (singleton.GetType() != typeof(Player))
@@ -91,6 +132,4 @@ public class GameInformationView : MonoBehaviour
         shootButton.onClick.AddListener(() => localPlayer.Shoot());
         localPlayer.status.OnHealthUpdate += (float value) => slider.value = value;
     }
-
-    #endregion Methods
 }

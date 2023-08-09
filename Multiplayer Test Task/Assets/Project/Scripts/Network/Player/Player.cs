@@ -5,15 +5,19 @@ using Mirror;
 using Mirror.Experimental;
 
 using UnityEngine;
-
+/// <summary>
+/// Игрок
+/// </summary>
 [RequireComponent(typeof(Status))]
 [RequireComponent(typeof(NetworkTransform))]
 [RequireComponent(typeof(NetworkRigidbody2D))]
-public class Player : NetworkBehaviour, IComparable<Player>, ISingleton//Игрок
+public class Player : NetworkBehaviour, IComparable<Player>, ISingleton
 {
-
     #region Events
 
+    /// <summary>
+    /// Событие, вызываемое при изменении количества монет игрока.
+    /// </summary>
     public event Action ChangeCoinsHandler;
 
     #endregion Events
@@ -65,11 +69,6 @@ public class Player : NetworkBehaviour, IComparable<Player>, ISingleton//Игрок
         if (!isLocalPlayer || !Application.isFocused)
             return;
 
-        //Move(
-        //    (Input.GetKey(KeyCode.D) ? 1 : 0) - (Input.GetKey(KeyCode.A) ? 1 : 0),
-        //    (Input.GetKey(KeyCode.W) ? 1 : 0) - (Input.GetKey(KeyCode.S) ? 1 : 0));
-        //Rotation((Input.GetKey(KeyCode.Q) ? 1 : 0) - (Input.GetKey(KeyCode.E) ? 1 : 0));
-
         if (joystick != null)
         {
             Move(0, joystick.inputVector.y);
@@ -105,7 +104,9 @@ public class Player : NetworkBehaviour, IComparable<Player>, ISingleton//Игрок
             return;
         _ = StartCoroutine(IShoot());
     }
+
     public void ChangeColorPlayer(Color oldColorPlayer, Color newColorPlayer) => GetComponent<SpriteRenderer>().color = newColorPlayer;
+
     public void ChangeNickname(string oldNickname, string newNickname) => ChangeCoinsHandler?.Invoke();
 
     public override void OnStartClient()
@@ -118,12 +119,14 @@ public class Player : NetworkBehaviour, IComparable<Player>, ISingleton//Игрок
         InitializeSingleton();
         network.AddPlayer(this);
     }
+
     [Command(requiresAuthority = false)]
     public void CmdSetInfoPlayer(Color color, string nickname, NetworkConnectionToClient sender = null)
     {
         colorPlayer = color;
         this.nickname = nickname;
     }
+
     public void ChangeCoins(int oldValue, int newValue)
     {
         coins = newValue;
@@ -139,6 +142,7 @@ public class Player : NetworkBehaviour, IComparable<Player>, ISingleton//Игрок
         network.RemovePlayer(this);
         network.CheckGameStatus();
     }
+
     public void InitializeSingleton()
     {
         if (!isLocalPlayer)
@@ -160,8 +164,12 @@ public class Player : NetworkBehaviour, IComparable<Player>, ISingleton//Игрок
         NetworkServer.Spawn(obj);
     }
 
+    /// <summary>
+    /// Сравнивает этого игрока с другим игроком по количеству монет.
+    /// </summary>
+    /// <param name="player">Игрок, с которым нужно сравнить текущего игрока.</param>
+    /// <returns>Результат сравнения.</returns>
     public int CompareTo(Player player) => player is null ? throw new ArgumentException("Некорректное значение параметра") : player.coins - coins;
 
     #endregion Methods
-
 }

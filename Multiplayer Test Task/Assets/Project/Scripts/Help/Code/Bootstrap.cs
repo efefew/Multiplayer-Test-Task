@@ -8,10 +8,16 @@ using UnityEngine;
 public class Bootstrap : MonoBehaviour, ISingleton
 {
     public static Bootstrap singleton { get; private set; }
-
+    /// <summary>
+    /// Обработчик для инициализации синглтона
+    /// </summary>
     public Action<ISingleton> InitializeSingletonHandler;
+    /// <summary>
+    /// Список синглтонов
+    /// </summary>
     public List<ISingleton> singletons { get; private set; } = new List<ISingleton>();
     private void Awake() => InitializeSingleton();
+
     public void InitializeSingleton()
     {
         if (singleton != null)
@@ -31,6 +37,10 @@ public class Bootstrap : MonoBehaviour, ISingleton
 
         OnCreateSingleton(singleton);
     }
+    /// <summary>
+    /// Обработчик для создания синглтона
+    /// </summary>
+    /// <param name="singleton">синглтон</param>
     public void OnCreateSingleton(ISingleton singleton)
     {
         _ = singletons.RemoveAll(x => x.IsUnityNull());
@@ -40,5 +50,8 @@ public class Bootstrap : MonoBehaviour, ISingleton
 }
 public interface ISingleton
 {
+    /// <summary>
+    /// Инициализация синглтона
+    /// </summary>
     public void InitializeSingleton();
 }
